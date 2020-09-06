@@ -1,0 +1,351 @@
+{
+	"info": {
+		"_postman_id": "2be553df-2dff-40bb-bef0-cba6aaa3f31f",
+		"name": "mutant",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Check DNA Humant 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "12e6c3e9-9189-44b4-b66f-f040fa003f80",
+						"exec": [
+							"pm.test(\"Check DNA Human 1 is ok\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dna\" : [\r\n        \"ATG\", \r\n        \"CTA\", \r\n        \"ATA\"\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/mutant",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"mutant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check DNA Human 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fd384f13-f953-45e0-af10-d6bedd9b4536",
+						"exec": [
+							"pm.test(\"Check DNA Human 2 is ok\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dna\" : [\r\n        \"TCC\",\r\n        \"AGT\",\r\n        \"ATA\"\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/mutant",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"mutant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check invalid DNA",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c6951d5a-df05-46c8-abf5-9ae6b7cc1155",
+						"exec": [
+							"pm.test(\"Http status for invalid DNA is ok\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dna\" : [\r\n        \"ATG\", \r\n        \"CA\", \r\n        \"ATA\"\r\n        ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/mutant",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"mutant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check DNA Mutant 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "702056d0-79ef-4ac2-b1c8-381b3850d5a4",
+						"exec": [
+							"pm.test(\"Check DNA Mutant 1 is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dna\":[\r\n        \"ATGCGA\",\r\n        \"CAGTGC\",\r\n        \"TTATGT\",\r\n        \"AGAAGG\",\r\n        \"CCCCTA\",\r\n        \"TCACTG\"\r\n        ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/mutant",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"mutant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check DNA Mutant 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ddfce2b1-fbc6-4365-8690-0e04e23ea353",
+						"exec": [
+							"pm.test(\"Check DNA Mutant 2 is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dna\":[\r\n        \"ATGCGAT\",\r\n        \"CAGTGCG\",\r\n        \"TTATGTC\",\r\n        \"AGAAGGA\",\r\n        \"CCCCTAA\",\r\n        \"TCACTGT\",\r\n        \"AAAAATT\"\r\n        ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/mutant",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"mutant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check DNA Mutant 3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9b69a94b-6ed5-46f8-9203-0096c71a26e3",
+						"exec": [
+							"pm.test(\"Check DNA Mutant 3 is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dna\":[\r\n        \"ATGCGAT\",\r\n        \"CAGTGCG\",\r\n        \"TTATGTC\",\r\n        \"AGAAGGA\",\r\n        \"CCCCTAA\",\r\n        \"TCACTGT\",\r\n        \"AAAAATT\"\r\n        ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/mutant",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"mutant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check DNA Mutant 4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d72d8858-a624-4a48-9fa1-0fc8595d4c9f",
+						"exec": [
+							"pm.test(\"Check DNA Mutant 4 is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dna\":[\r\n        \"ATGCGATC\",\r\n        \"CAGTGCGT\",\r\n        \"TTATGTCG\",\r\n        \"AGAAGGAC\",\r\n        \"CCCCTAAA\",\r\n        \"TCACTGTA\",\r\n        \"AAAAATTA\",\r\n        \"CGTACGGA\"\r\n        ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/mutant",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"mutant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stats",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bc9b52db-0937-4932-ae32-f0ea86deaa54",
+						"exec": [
+							"const schema = {\r",
+							"    \"count_human_dna\": {\r",
+							"        \"type\": Number\r",
+							"    },\r",
+							"    \"count_mutant_dna\": {\r",
+							"        \"type\": Number\r",
+							"    },\r",
+							"    \"ratio\": {\r",
+							"        \"type\": Number\r",
+							"    }\r",
+							"}\r",
+							"pm.test(\"HTTP Status of stats is valid\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"pm.test(\"Response body of test is valid\", function () {\r",
+							"    pm.response.to.have.jsonSchema(schema)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/stats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"stats"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
