@@ -147,10 +147,10 @@ public class MutantServiceImpl implements MutantService {
     String computeDnaHash(String[] dna) {
         LOGGER.debug("Computing DNA Sample hash...");
         String hash = null;
-        StringBuilder dnaAsString = new StringBuilder();
-        range(0, dna.length).forEach(idx -> dnaAsString.append(dna[idx]));
         try {
             MessageDigest md = getInstance(digestAlgorithm);
+            StringBuilder dnaAsString = new StringBuilder();
+            range(0, dna.length).forEach(idx -> dnaAsString.append(dna[idx]));
             md.update(dnaAsString.toString().getBytes());
             byte[] digest = md.digest();
             hash = printHexBinary(digest).toUpperCase();

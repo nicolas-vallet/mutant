@@ -32,7 +32,7 @@ public class MutantController {
     public ResponseEntity<Void> verifyDna(@RequestBody VerifyDnaRequest request) {
         LOGGER.info("Receiving dna[{}] to check...", request);
 
-        boolean isMutant = false;
+        boolean isMutant;
         try {
             isMutant = mutantService.isMutant(request.getDna());
         } catch (IllegalArgumentException ex) {

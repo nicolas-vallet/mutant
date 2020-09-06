@@ -1,7 +1,5 @@
 package com.nicovallet.mutant.entity;
 
-import com.nicovallet.mutant.CommonConstants;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;

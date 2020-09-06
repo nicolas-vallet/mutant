@@ -1,7 +1,5 @@
 package com.nicovallet.mutant.domain;
 
-import java.math.MathContext;
-
 import static java.math.BigDecimal.valueOf;
 import static java.math.MathContext.DECIMAL32;
 
