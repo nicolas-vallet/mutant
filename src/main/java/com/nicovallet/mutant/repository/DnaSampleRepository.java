@@ -10,10 +10,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static com.nicovallet.mutant.configuration.MutantConfiguration.STATS_CACHE_NAME;
-
 @Repository
 public interface DnaSampleRepository extends CrudRepository<DnaSampleEntity, Integer> {
+
+    String STATS_CACHE_NAME = "STATS";
 
     Optional<DnaSampleEntity> findDnaSampleEntityByHash(String hash);
 

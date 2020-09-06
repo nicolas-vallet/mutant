@@ -11,6 +11,4 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackageClasses = {ControllerPkg.class, ServicePkg.class,
         RepositoryPkg.class, EntityPkg.class})
 public class MutantConfiguration {
-
-    public static final String STATS_CACHE_NAME = "STATS";
 }
