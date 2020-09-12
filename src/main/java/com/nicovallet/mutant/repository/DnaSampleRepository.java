@@ -17,12 +17,13 @@ public interface DnaSampleRepository extends CrudRepository<DnaSampleEntity, Int
 
     Optional<DnaSampleEntity> findDnaSampleEntityByHash(String hash);
 
-    @CacheEvict(value = STATS_CACHE_NAME, allEntries = true)
-    DnaSampleEntity save(DnaSampleEntity entity);
-
-    @Query(value = "SELECT h.count as countHumanDna, m.count as countMutantDna " +
-            "FROM (select count(*) as count FROM dna_sample WHERE is_mutant = 0) h," +
-            "     (select count(*) as count FROM dna_sample WHERE is_mutant = 1) m", nativeQuery = true)
+    @Query("select count(case when isMutant = false then 1 end) as countHumanDna," +
+            "      count(case when isMutant = true  then 1 end) as countMutantDna " +
+            "  from DnaSampleEntity")
     @Cacheable(value = STATS_CACHE_NAME)
     DnaStats fetchStats();
+
+    @Override
+    @CacheEvict(value = STATS_CACHE_NAME, allEntries = true)
+    <S extends DnaSampleEntity> S save(S entity);
 }
