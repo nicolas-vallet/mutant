@@ -345,6 +345,95 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Check DNA Mutant 5",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "66739e84-f63f-459e-a983-5258082bd2cb",
+            "exec": [
+              "pm.test(\"Check DNA Mutant 4 is ok\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"dna\":[\r\n        \"ATGCGATC\",\r\n        \"CAGTGCGT\",\r\n        \"TTATGTCG\",\r\n        \"AGAAGGAG\",\r\n        \"CCCCTAAA\",\r\n        \"TCACTGTA\",\r\n        \"AAAAATTA\",\r\n        \"CGTACGGA\"\r\n        ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/mutant",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "mutant"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Stats",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "9503cb94-ca70-43d0-a0b3-94f53c626eda",
+            "exec": [
+              "const schema = {\r",
+              "    \"count_human_dna\": {\r",
+              "        \"type\": Number\r",
+              "    },\r",
+              "    \"count_mutant_dna\": {\r",
+              "        \"type\": Number\r",
+              "    },\r",
+              "    \"ratio\": {\r",
+              "        \"type\": Number\r",
+              "    }\r",
+              "}\r",
+              "pm.test(\"HTTP Status of stats is valid\", function() {\r",
+              "    pm.response.to.have.status(200);\r",
+              "})\r",
+              "pm.test(\"Response body of test is valid\", function () {\r",
+              "    pm.response.to.have.jsonSchema(schema)\r",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/stats",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "stats"
+          ]
+        }
+      },
+      "response": []
     }
   ],
   "protocolProfileBehavior": {}

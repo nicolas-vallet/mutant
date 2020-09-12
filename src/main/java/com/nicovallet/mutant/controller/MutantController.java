@@ -1,7 +1,8 @@
 package com.nicovallet.mutant.controller;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nicovallet.mutant.domain.DnaStats;
+import com.nicovallet.mutant.dto.DnaStatsResponse;
+import com.nicovallet.mutant.dto.VerifyDnaRequest;
 import com.nicovallet.mutant.service.MutantService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Arrays;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -58,68 +57,5 @@ public class MutantController {
         response.setCountHumanDna(stats.getCountHumanDna());
         response.setRatio(stats.getRatio());
         return ResponseEntity.ok(response);
-    }
-
-    public static class VerifyDnaRequest {
-        private String[] dna;
-
-        public String[] getDna() {
-            return dna;
-        }
-
-        public void setDna(String[] dna) {
-            this.dna = dna;
-        }
-
-        @Override
-        public String toString() {
-            return "VerifyDnaRequest{" +
-                    "dna=" + Arrays.toString(dna) +
-                    '}';
-        }
-    }
-
-    public static class DnaStatsResponse {
-        @JsonProperty("count_mutant_dna")
-        private Integer countMutantDna;
-
-        @JsonProperty("count_human_dna")
-        private Integer countHumanDna;
-
-        @JsonProperty("ratio")
-        private double ratio;
-
-        public Integer getCountMutantDna() {
-            return countMutantDna;
-        }
-
-        public void setCountMutantDna(Integer countMutantDna) {
-            this.countMutantDna = countMutantDna;
-        }
-
-        public Integer getCountHumanDna() {
-            return countHumanDna;
-        }
-
-        public void setCountHumanDna(Integer countHumanDna) {
-            this.countHumanDna = countHumanDna;
-        }
-
-        public double getRatio() {
-            return ratio;
-        }
-
-        public void setRatio(double ratio) {
-            this.ratio = ratio;
-        }
-
-        @Override
-        public String toString() {
-            return "DnaStatsResponse{" +
-                    "countMutantDna=" + countMutantDna +
-                    ", countHumanDna=" + countHumanDna +
-                    ", ratio=" + ratio +
-                    '}';
-        }
     }
 }

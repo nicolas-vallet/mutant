@@ -3,7 +3,6 @@ package com.nicovallet.mutant.service;
 import com.nicovallet.mutant.domain.DnaStats;
 import com.nicovallet.mutant.entity.DnaSampleEntity;
 import com.nicovallet.mutant.repository.DnaSampleRepository;
-import com.nicovallet.mutant.util.MutantHelper;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +21,6 @@ import java.util.regex.Pattern;
 
 import static java.security.MessageDigest.getInstance;
 import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
 import static java.util.regex.Pattern.compile;
 import static java.util.stream.IntStream.range;
 import static javax.xml.bind.DatatypeConverter.printHexBinary;
@@ -35,7 +33,6 @@ public class MutantServiceImpl implements MutantService {
     private static final Logger LOGGER = getLogger(MutantServiceImpl.class);
 
     private static final int MINIMUM_MATCHES_REQUIRED = 2;
-    private static final List<Integer> AUTHORIZED_CHARACTERS = asList((int) 'A', (int) 'T', (int) 'C', (int) 'G');
     private static final Pattern MATCHING_PATTERN = compile("AAAA|TTTT|CCCC|GGGG");
 
     private final DnaSampleRepository dnaSampleRepository;
@@ -52,7 +49,7 @@ public class MutantServiceImpl implements MutantService {
         this.digestAlgorithm = digestAlgorithm;
         try {
             getInstance(digestAlgorithm);
-            LOGGER.info("DNA sample uniqueness will be enforced by hash computation with {} algorithm",
+            LOGGER.warn("DNA sample uniqueness will be enforced by hash computation with {} algorithm",
                     digestAlgorithm);
             tmpDnaUniquenessEnforced = true;
         } catch (NoSuchAlgorithmException nsax) {
@@ -67,8 +64,13 @@ public class MutantServiceImpl implements MutantService {
     }
 
     @Override
+    public DnaStats fetchStats() {
+        return dnaSampleRepository.fetchStats();
+    }
+
+    @Override
     public boolean isMutant(String[] dna) {
-        validateDna(dna);
+        helper.validateDna(dna);
 
         /* Generate hash to ensure uniqueness of the stored DNA */
         String hash = dnaUniquenessEnforced ? computeDnaHash(dna) : null;
@@ -167,22 +169,5 @@ public class MutantServiceImpl implements MutantService {
             LOGGER.info("Found [{}] pattern", matcher.group());
             matchCount.getAndIncrement();
         }
-    }
-
-    private void validateDna(String[] dna) {
-        if (null == dna || dna.length == 0 || stream(dna).anyMatch(l -> l.length() != dna.length)) {
-            throw new IllegalArgumentException("Received DNA should be of an array of string (NxN, n stricly positive");
-        }
-
-        stream(dna).forEach(l -> {
-            if (l.codePoints().anyMatch(c -> !AUTHORIZED_CHARACTERS.contains(c))) {
-                throw new IllegalArgumentException("At least one unexpected character was found in received DNA");
-            }
-        });
-    }
-
-    @Override
-    public DnaStats fetchStats() {
-        return dnaSampleRepository.fetchStats();
     }
 }

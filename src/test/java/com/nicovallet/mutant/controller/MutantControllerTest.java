@@ -1,8 +1,8 @@
 package com.nicovallet.mutant.controller;
 
-import com.nicovallet.mutant.controller.MutantController.DnaStatsResponse;
-import com.nicovallet.mutant.controller.MutantController.VerifyDnaRequest;
 import com.nicovallet.mutant.domain.DnaStats;
+import com.nicovallet.mutant.dto.DnaStatsResponse;
+import com.nicovallet.mutant.dto.VerifyDnaRequest;
 import com.nicovallet.mutant.service.MutantService;
 import org.junit.Before;
 import org.junit.Test;

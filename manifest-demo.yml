@@ -10,4 +10,4 @@ applications:
     buildpacks:
       - https://github.com/cloudfoundry/java-buildpack.git
     env:
-       JAVA_OPTS: '-XX:ReservedCodeCacheSize=32m -Xss228k'
+      JAVA_OPTS: '-XX:ReservedCodeCacheSize=32m -Xss228k'

@@ -1,4 +1,4 @@
-package com.nicovallet.mutant.util;
+package com.nicovallet.mutant.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +26,36 @@ public class MutantHelperTest {
     };
 
     private MutantHelper underTest = new MutantHelper();
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateDna_withNullDna() {
+        underTest.validateDna(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateDna_withEmptyDna() {
+        underTest.validateDna(new String[]{});
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateDna_withUnexpectedCharacter() {
+        underTest.validateDna(new String[]{
+                "ACTG",
+                "ATCC",
+                "TGCA",
+                "TGAZ"
+        });
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateDna_withUnsquareDna() {
+        underTest.validateDna(new String[]{
+                "ACTG",
+                "ATCC",
+                "TGCA",
+                "TGA"
+        });
+    }
 
     @Test
     public void testConvertArrayOfStringsTo2DArrayOfChars() {

@@ -9,5 +9,4 @@ class MutanteFinderApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }
