@@ -437,12 +437,68 @@
 		},
 		{
 			"name": "Check DNA Mutant (diagonals)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ffeebdad-17f4-472e-a58a-646192181267",
+						"exec": [
+							"pm.test(\"Check DNA Mutant 4 is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n    \"dna\": [\r\n        \"ATGCAC\",\r\n        \"CGAGCA\",\r\n        \"TGCAGT\",\r\n        \"TAACTG\",\r\n        \"TCGTAT\",\r\n        \"GCTTAC\"\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/mutant",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"mutant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check DNA Mutant (columns)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "94c8ce86-6301-4327-9522-5767c6edd15e",
+						"exec": [
+							"pm.test(\"Check DNA Mutant 4 is ok\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dna\": [\r\n        \"ATCGAA\",\r\n        \"CATGCA\",\r\n        \"CATACA\",\r\n        \"GACGGA\",\r\n        \"TAGCTT\",\r\n        \"ATGCCA\"\r\n\r\n    ]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

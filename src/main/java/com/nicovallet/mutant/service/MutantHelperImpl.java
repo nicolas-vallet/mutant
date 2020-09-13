@@ -17,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static com.nicovallet.mutant.service.MutantHelperImpl.InterruptibleForEach.forEach;
 import static java.security.MessageDigest.getInstance;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
@@ -38,7 +39,7 @@ public class MutantHelperImpl implements MutantHelper {
     private final boolean dnaUniquenessEnforced;
 
     @Autowired
-    public MutantHelperImpl(@Value("${mutant.digest-algorithm}")String digestAlgorithm) {
+    public MutantHelperImpl(@Value("${mutant.digest-algorithm}") String digestAlgorithm) {
         boolean tmpDnaUniquenessEnforced;
         this.digestAlgorithm = digestAlgorithm;
         try {
@@ -160,24 +161,30 @@ public class MutantHelperImpl implements MutantHelper {
     }
 
     public boolean findMatchingSequencesInStrings(List<String> lines, AtomicInteger matchesCount) {
-//        lines.forEach(d -> {
-//            Matcher matcher = MATCHING_PATTERN.matcher(d);
-//            countOccurrences(matchesCount, matcher);
-//        });
-//        return matchesCount.get() >= MINIMUM_MATCHES_REQUIRED;
-
-        CustomForEach.forEach(lines.stream(), (line, breaker) -> {
+        forEach(lines.stream(), (line, interrupter) -> {
             Matcher matcher = MATCHING_PATTERN.matcher(line);
             countOccurrences(matchesCount, matcher);
             if (matchesCount.get() >= MINIMUM_MATCHES_REQUIRED) {
-                breaker.stop();
+                interrupter.stop();
             }
         });
         return matchesCount.get() >= MINIMUM_MATCHES_REQUIRED;
     }
 
-    static class CustomForEach {
-        public static class Breaker {
+    static class InterruptibleForEach {
+        public static void forEach(Stream<String> stream, BiConsumer<String, Interrupter> consumer) {
+            Spliterator<String> spliterator = stream.spliterator();
+            boolean hadNext = true;
+            Interrupter breaker = new Interrupter();
+
+            while (hadNext && !breaker.get()) {
+                hadNext = spliterator.tryAdvance(elem -> {
+                    consumer.accept(elem, breaker);
+                });
+            }
+        }
+
+        public static class Interrupter {
             private boolean shouldBreak = false;
 
             public void stop() {
@@ -186,18 +193,6 @@ public class MutantHelperImpl implements MutantHelper {
 
             boolean get() {
                 return shouldBreak;
-            }
-        }
-
-        public static void forEach(Stream<String> stream, BiConsumer<String, Breaker> consumer) {
-            Spliterator<String> spliterator = stream.spliterator();
-            boolean hadNext = true;
-            Breaker breaker = new Breaker();
-
-            while (hadNext && !breaker.get()) {
-                hadNext = spliterator.tryAdvance(elem -> {
-                    consumer.accept(elem, breaker);
-                });
             }
         }
     }

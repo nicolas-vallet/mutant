@@ -170,7 +170,7 @@ public class MutantHelperImplTest {
 
     @Test
     public void testExtractColumns() {
-        String[] input = new String[] {
+        String[] input = new String[]{
                 "ABCDEF",
                 "ABCDEF",
                 "ABCDEF",
