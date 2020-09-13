@@ -44,35 +44,24 @@ public class MutantServiceImplTest {
 
     @Mock
     private DnaSampleRepository mockedDnaSampleRepository;
+    @Mock
+    private MutantHelper mockedMutantHelper;
 
     @Before
     public void setUp() {
-        underTest = new MutantServiceImpl(mockedDnaSampleRepository, "SHA1");
+        underTest = new MutantServiceImpl(mockedDnaSampleRepository, mockedMutantHelper);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testIsMutant_withNullDna() {
+        doThrow(new IllegalArgumentException()).when(mockedMutantHelper).validateDna(null);
         underTest.isMutant(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testIsMutant_withEmptyDna() {
+        doThrow(new IllegalArgumentException()).when(mockedMutantHelper).validateDna(new String[0]);
         underTest.isMutant(new String[0]);
-    }
-
-    @Test
-    public void testIsMutant_withInvalidDna() {
-        try {
-            underTest.isMutant(INVALID_DNA_1);
-            fail();
-        } catch (IllegalArgumentException ex) {
-        }
-
-        try {
-            underTest.isMutant(INVALID_DNA_2);
-            fail();
-        } catch (IllegalArgumentException ex) {
-        }
     }
 
     @Test
@@ -87,18 +76,9 @@ public class MutantServiceImplTest {
     }
 
     @Test
-    public void testIsMutant_withMutantDna() {
-        assertTrue(underTest.isMutant(MUTANT_DNA));
-    }
-
-    @Test
-    public void testIsMutant_withHumanDna() {
-        assertFalse(underTest.isMutant(NON_MUTANT_DNA));
-    }
-
-    @Test
     public void testIsMutant_withKnownDna() {
-        String hash = underTest.computeDnaHash(MUTANT_DNA);
+        String hash = "1234567890123456789012345678901234567890";
+        when(mockedMutantHelper.computeDnaHash(MUTANT_DNA)).thenReturn(hash);
         DnaSampleEntity knownSample = new DnaSampleEntity();
         knownSample.setDna(MUTANT_DNA);
         knownSample.setHash(hash);
@@ -106,25 +86,14 @@ public class MutantServiceImplTest {
         when(mockedDnaSampleRepository.findDnaSampleEntityByHash(hash)).thenReturn(Optional.of(knownSample));
 
         boolean result = underTest.isMutant(MUTANT_DNA);
+        ArgumentCaptor<String[]> dnaCaptor = forClass(String[].class);
+        verify(mockedMutantHelper, times(1)).computeDnaHash(dnaCaptor.capture());
+        assertArrayEquals(MUTANT_DNA, dnaCaptor.getValue());
         ArgumentCaptor<String> hashCaptor = forClass(String.class);
         verify(mockedDnaSampleRepository, times(1))
                 .findDnaSampleEntityByHash(hashCaptor.capture());
         assertEquals(hash, hashCaptor.getValue());
         verify(mockedDnaSampleRepository, times(0)).save(any(DnaSampleEntity.class));
-    }
-
-    @Test
-    public void testComputeDnaHash() {
-        assertNotEquals(
-                underTest.computeDnaHash(new String[]{"FB"}),
-                underTest.computeDnaHash(new String[]{"Ea"})
-        );
-    }
-
-    @Test
-    public void testComputeDnaHash_withInvalidDigestAlgorithm() {
-        underTest = new MutantServiceImpl(mockedDnaSampleRepository, "UNAVAILABLE_ALGO");
-        assertNull(underTest.computeDnaHash(MUTANT_DNA));
     }
 
     @Test
