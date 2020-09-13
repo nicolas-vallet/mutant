@@ -13,7 +13,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Optional;
 
 import static com.nicovallet.mutant.CommonConstants.MUTANT_DNA;
-import static com.nicovallet.mutant.CommonConstants.NON_MUTANT_DNA;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Mockito.*;

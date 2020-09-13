@@ -2,7 +2,6 @@ package com.nicovallet.mutant.service;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 
 public interface MutantHelper {
