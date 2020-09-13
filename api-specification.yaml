@@ -1,0 +1,58 @@
+openapi: "3.0.2"
+info:
+  title: Mutant finder API
+  version: "0.0.1"
+servers:
+  - url: http://localhost:8080
+    description: Local development instance
+  - url: https://mutant-demo.herokuapp.com/
+    description: Demo instance deployed in Heroku cloud
+paths:
+  /mutant:
+    post:
+      summary: Given a DNA sample, tests if it is a human or mutant DNA.
+      requestBody:
+        description: Contains the DNA to test
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dna:
+                  type: array
+                  items:
+                    type: string
+                  example: ["ATCG", "CGTA", "AAGC", "TTCA"]
+      responses:
+        '200':
+          description: The received DNA is a mutant DNA
+        '403':
+          description: The received DNA is a human DNA
+        '400':
+          description: Either the DNA was not provided or it does not respect the expected form.
+
+  /stats:
+    get:
+      summary: Provides some stats about the DNA samples present in the database.
+      responses:
+        '200':
+          description: Returns stats about the samples present in the database.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count_mutant_dna:
+                    type: integer
+                    description: Count of human DNA samples in the database
+                    example: 40
+                  count_human_dna:
+                    type: integer
+                    description: Count of mutant DNA samples in the database
+                    example: 100
+                  ratio:
+                    type: number
+                    format: double
+                    description: Ratio mutant/human
+                    example: 0.4
