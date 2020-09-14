@@ -1,16 +1,19 @@
 package com.nicovallet.mutant.service;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.nicovallet.mutant.CommonConstants.*;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MutantHelperTest {
+public class MutantHelperImplTest {
 
     private static final char[][] DNA_CONTENT_AS_2D_CHARS_ARRAY = new char[][]{
             {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'},
@@ -25,7 +28,12 @@ public class MutantHelperTest {
             {'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1'}
     };
 
-    private MutantHelper underTest = new MutantHelper();
+    private MutantHelperImpl underTest;
+
+    @Before
+    public void setUp() {
+        this.underTest = new MutantHelperImpl("SHA1");
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void testValidateDna_withNullDna() {
@@ -117,5 +125,66 @@ public class MutantHelperTest {
         assertTrue(found.contains("AAAATG"));
         assertTrue(found.contains("TGTGA"));
         assertTrue(found.contains("GTGG"));
+    }
+
+    @Test
+    public void testComputeDnaHash() {
+        assertNotEquals(
+                underTest.computeDnaHash(new String[]{"FB"}),
+                underTest.computeDnaHash(new String[]{"Ea"})
+        );
+    }
+
+    @Test
+    public void testComputeDnaHash_withInvalidDigestAlgorithm() {
+        underTest = new MutantHelperImpl("UNAVAILABLE_ALGO");
+        assertNull(underTest.computeDnaHash(MUTANT_DNA));
+    }
+
+    @Test
+    public void testFindMatchingSequencesInStrings() {
+        List<String> input = asList(
+                "ATGGGG",
+                "TTTTCACCCC",
+                "TATGAC",
+                "GATACG",
+                "AGATCT",
+                "GTCCCC"
+        );
+        AtomicInteger matchesCount = new AtomicInteger(0);
+        assertTrue(underTest.findMatchingSequencesInStrings(input, matchesCount));
+        assertEquals(2, matchesCount.get());
+
+        input = asList(
+                "ATGGCG",
+                "TTAGCA",
+                "TATGAC",
+                "GATACG",
+                "AGATCT",
+                "GTCCCC"
+        );
+        matchesCount = new AtomicInteger(0);
+        assertFalse(underTest.findMatchingSequencesInStrings(input, matchesCount));
+        assertEquals(1, matchesCount.get());
+    }
+
+    @Test
+    public void testExtractColumns() {
+        String[] input = new String[]{
+                "ABCDEF",
+                "ABCDEF",
+                "ABCDEF",
+                "ABCDEF",
+                "ABCDEF",
+                "ABCDEF",
+        };
+        List<String> result = underTest.extractColumns(input);
+        assertEquals(6, result.size());
+        assertTrue(result.contains("AAAAAA"));
+        assertTrue(result.contains("BBBBBB"));
+        assertTrue(result.contains("CCCCCC"));
+        assertTrue(result.contains("DDDDDD"));
+        assertTrue(result.contains("EEEEEE"));
+        assertTrue(result.contains("FFFFFF"));
     }
 }
