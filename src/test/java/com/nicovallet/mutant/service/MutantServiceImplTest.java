@@ -1,5 +1,6 @@
 package com.nicovallet.mutant.service;
 
+import com.nicovallet.mutant.domain.DnaSample;
 import com.nicovallet.mutant.domain.DnaStats;
 import com.nicovallet.mutant.entity.DnaSampleEntity;
 import com.nicovallet.mutant.repository.DnaSampleRepository;
@@ -10,12 +11,16 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.nicovallet.mutant.CommonConstants.MUTANT_DNA;
+import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static java.util.stream.IntStream.range;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Mockito.*;
@@ -303,5 +308,35 @@ public class MutantServiceImplTest {
         assertArrayEquals(DNA_FOR_FULL_TEST, entity.getDna());
         assertEquals(HASH, entity.getHash());
         assertFalse(entity.isMutant());
+    }
+
+    @Test
+    public void testFetchSamples() {
+        List<DnaSampleEntity> entities = new ArrayList<>();
+        range(0, 10).forEach(idx -> {
+            DnaSampleEntity entity = new DnaSampleEntity();
+            entity.setId(idx);
+            entity.setDna(new String[]{
+                    format("ATC%2d", idx),
+                    format("GTC%2d", idx),
+                    format("CTA%2d", idx),
+                    format("CAC%2d", idx),
+                    format("TCA%2d", idx)
+            });
+            entity.setHash("HASH-" + idx);
+            entity.setMutant(idx % 2 == 0);
+            entities.add(entity);
+        });
+        when(mockedDnaSampleRepository.findAll()).thenReturn(entities);
+
+        List<DnaSample> samples = underTest.fetchSamples();
+        assertEquals(10, samples.size());
+        assertEquals(0, (int) samples.get(0).getId());
+        assertEquals("HASH-0", samples.get(0).getHash());
+        assertTrue(samples.get(0).isMutant());
+
+        assertEquals(9, (int) samples.get(9).getId());
+        assertEquals("HASH-9", samples.get(9).getHash());
+        assertFalse(samples.get(9).isMutant());
     }
 }

@@ -1,6 +1,7 @@
 package com.nicovallet.mutant.controller;
 
 import com.nicovallet.mutant.domain.DnaStats;
+import com.nicovallet.mutant.dto.DnaSampleResponse;
 import com.nicovallet.mutant.dto.DnaStatsResponse;
 import com.nicovallet.mutant.dto.VerifyDnaRequest;
 import com.nicovallet.mutant.service.MutantService;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @RestController
@@ -57,5 +61,19 @@ public class MutantController {
         response.setCountHumanDna(stats.getCountHumanDna());
         response.setRatio(stats.getRatio());
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/sample")
+    public ResponseEntity<List<DnaSampleResponse>> fetchSamples() {
+        LOGGER.info("Fetching DNA samples...");
+        return ResponseEntity.ok(mutantService.fetchSamples().stream()
+                .map(i -> {
+                    DnaSampleResponse o = new DnaSampleResponse();
+                    o.setId(i.getId());
+                    o.setDna(i.getDna());
+                    o.setHash(i.getHash());
+                    o.setMutant(i.isMutant());
+                    return o;
+                }).collect(toList()));
     }
 }

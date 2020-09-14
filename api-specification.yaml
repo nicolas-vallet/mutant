@@ -8,6 +8,20 @@ servers:
   - url: https://mutant-demo.herokuapp.com/
     description: Demo instance deployed in Heroku cloud
 paths:
+  /sample:
+    get:
+      summary: Fetches the DNA samples contained in the database.
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DnaSample'
+
+
   /mutant:
     post:
       summary: Given a DNA sample, tests if it is a human or mutant DNA.
@@ -56,3 +70,16 @@ paths:
                     format: double
                     description: Ratio mutant/human
                     example: 0.4
+components:
+  schemas:
+    DnaSample:
+      type: object
+      properties:
+        id:
+          type: integer
+        dna:
+          type: array
+          items:
+            type: string
+        is_mutant:
+          type: boolean

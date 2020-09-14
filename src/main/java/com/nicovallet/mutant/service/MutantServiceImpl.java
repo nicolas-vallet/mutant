@@ -1,5 +1,6 @@
 package com.nicovallet.mutant.service;
 
+import com.nicovallet.mutant.domain.DnaSample;
 import com.nicovallet.mutant.domain.DnaStats;
 import com.nicovallet.mutant.entity.DnaSampleEntity;
 import com.nicovallet.mutant.repository.DnaSampleRepository;
@@ -13,6 +14,8 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.StreamSupport.stream;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Service
@@ -29,6 +32,19 @@ public class MutantServiceImpl implements MutantService {
                              MutantHelper helper) {
         this.dnaSampleRepository = dnaSampleRepository;
         this.mutantHelper = helper;
+    }
+
+    @Override
+    public List<DnaSample> fetchSamples() {
+        return stream(dnaSampleRepository.findAll().spliterator(), false)
+                .map(i -> {
+                    DnaSample o = new DnaSample();
+                    o.setId(i.getId());
+                    o.setDna(i.getDna());
+                    o.setHash(i.getHash());
+                    o.setMutant(i.isMutant());
+                    return o;
+                }).collect(toList());
     }
 
     @Override
