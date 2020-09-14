@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2be553df-2dff-40bb-bef0-cba6aaa3f31f",
+		"_postman_id": "785bf39f-83d5-43c3-b3bc-c4f0a6495f47",
 		"name": "mutant",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,7 +11,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "12e6c3e9-9189-44b4-b66f-f040fa003f80",
+						"id": "53d5fb4f-1de7-42da-951f-afe704e79ff3",
 						"exec": [
 							"pm.test(\"Check DNA Human 1 is ok\", function () {\r",
 							"    pm.response.to.have.status(403);\r",
@@ -53,7 +53,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "fd384f13-f953-45e0-af10-d6bedd9b4536",
+						"id": "5bf4d534-5093-42a5-80fd-9474cd180177",
 						"exec": [
 							"pm.test(\"Check DNA Human 2 is ok\", function () {\r",
 							"    pm.response.to.have.status(403);\r",
@@ -90,12 +90,54 @@
 			"response": []
 		},
 		{
+			"name": "Check DNA Human 3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e7f37d96-85b5-43c6-b550-4d6d1c2c623a",
+						"exec": [
+							"pm.test(\"Check DNA Human 2 is ok\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dna\" : [\r\n        \"TCCGCA\",\r\n        \"AGTTGC\",\r\n        \"ATACAG\",\r\n        \"TCCAGG\",\r\n        \"ATTGCA\",\r\n        \"CGGCAC\"\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/mutant",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"mutant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Check invalid DNA",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "c6951d5a-df05-46c8-abf5-9ae6b7cc1155",
+						"id": "5d733fd2-5a3d-46e7-97d2-f45adb577673",
 						"exec": [
 							"pm.test(\"Http status for invalid DNA is ok\", function () {\r",
 							"    pm.response.to.have.status(400);\r",
@@ -137,7 +179,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "702056d0-79ef-4ac2-b1c8-381b3850d5a4",
+						"id": "449b7b8c-2efd-4a48-b05d-b1a5046d4b58",
 						"exec": [
 							"pm.test(\"Check DNA Mutant 1 is ok\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -179,7 +221,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "ddfce2b1-fbc6-4365-8690-0e04e23ea353",
+						"id": "5f56515d-c51c-4d94-a2e7-87a58c82fed7",
 						"exec": [
 							"pm.test(\"Check DNA Mutant 2 is ok\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -221,7 +263,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "9b69a94b-6ed5-46f8-9203-0096c71a26e3",
+						"id": "1151606d-c938-493b-b253-85755c0d5d4e",
 						"exec": [
 							"pm.test(\"Check DNA Mutant 3 is ok\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -263,7 +305,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "d72d8858-a624-4a48-9fa1-0fc8595d4c9f",
+						"id": "12077124-060f-4465-b32b-e67abeeb08c4",
 						"exec": [
 							"pm.test(\"Check DNA Mutant 4 is ok\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -305,7 +347,54 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "bc9b52db-0937-4932-ae32-f0ea86deaa54",
+						"id": "ceb8dba0-f3e8-4a74-8ade-21f6f3111c6c",
+						"exec": [
+							"const schema = {\r",
+							"    \"count_human_dna\": {\r",
+							"        \"type\": Number\r",
+							"    },\r",
+							"    \"count_mutant_dna\": {\r",
+							"        \"type\": Number\r",
+							"    },\r",
+							"    \"ratio\": {\r",
+							"        \"type\": Number\r",
+							"    }\r",
+							"}\r",
+							"pm.test(\"HTTP Status of stats is valid\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"pm.test(\"Response body of test is valid\", function () {\r",
+							"    pm.response.to.have.jsonSchema(schema)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/stats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"stats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stats 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6cc8645a-10b6-466f-9d92-e7c11c941f64",
 						"exec": [
 							"const schema = {\r",
 							"    \"count_human_dna\": {\r",
@@ -352,7 +441,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "66739e84-f63f-459e-a983-5258082bd2cb",
+						"id": "13432cf5-fd24-406b-b76d-ceaffc8c830d",
 						"exec": [
 							"pm.test(\"Check DNA Mutant 4 is ok\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -389,12 +478,12 @@
 			"response": []
 		},
 		{
-			"name": "Stats",
+			"name": "Stats 3",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "9503cb94-ca70-43d0-a0b3-94f53c626eda",
+						"id": "371cbd29-6556-417e-8fb3-5388889fbd28",
 						"exec": [
 							"const schema = {\r",
 							"    \"count_human_dna\": {\r",
@@ -441,7 +530,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "ffeebdad-17f4-472e-a58a-646192181267",
+						"id": "14cf6e4d-ac35-43bf-8003-0d6cb76c20a7",
 						"exec": [
 							"pm.test(\"Check DNA Mutant 4 is ok\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -483,7 +572,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "94c8ce86-6301-4327-9522-5767c6edd15e",
+						"id": "5cd8a7af-cd80-40dc-a5c0-0bc718398b47",
 						"exec": [
 							"pm.test(\"Check DNA Mutant 4 is ok\", function () {\r",
 							"    pm.response.to.have.status(200);\r",

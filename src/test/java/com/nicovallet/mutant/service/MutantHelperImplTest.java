@@ -133,6 +133,10 @@ public class MutantHelperImplTest {
                 underTest.computeDnaHash(new String[]{"FB"}),
                 underTest.computeDnaHash(new String[]{"Ea"})
         );
+
+        assertEquals("ACA7BAC2E328C26550B24888CC84DA44F26E7B7B", underTest.computeDnaHash(new String[] {
+            "ATCGAA", "CATGCA","CATACA","GACGGA","TAGCTT","ATGCCA"
+        }));
     }
 
     @Test
