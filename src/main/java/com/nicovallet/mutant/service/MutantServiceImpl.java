@@ -62,11 +62,11 @@ public class MutantServiceImpl implements MutantService {
 
         AtomicInteger matchCount = new AtomicInteger();
 
-        LOGGER.info("Searching in lines...");
+        LOGGER.debug("Searching in lines...");
         boolean requiredMatchesFound = mutantHelper.findMatchingSequencesInStrings(asList(dna), matchCount);
 
         if (!requiredMatchesFound) {
-            LOGGER.info("Searching in columns...");
+            LOGGER.debug("Searching in columns...");
             List<String> columns = mutantHelper.extractColumns(dna);
             requiredMatchesFound = mutantHelper.findMatchingSequencesInStrings(columns, matchCount);
         }
@@ -76,13 +76,13 @@ public class MutantServiceImpl implements MutantService {
         if (!requiredMatchesFound) {
             /* Transforming the DNA in a two dimensional array */
             dnaContent = mutantHelper.convertArrayOfStringsTo2DArrayOfChars(dna);
-            LOGGER.info("Searching in diagonals NW to SE...");
+            LOGGER.debug("Searching in diagonals NW to SE...");
             diagonals = mutantHelper.extractDiagonalsFromNorthWestToSouthEast(dnaContent);
             requiredMatchesFound = mutantHelper.findMatchingSequencesInStrings(diagonals, matchCount);
         }
 
         if (!requiredMatchesFound) {
-            LOGGER.info("Searching in diagonals SW to NE...");
+            LOGGER.debug("Searching in diagonals SW to NE...");
             diagonals = mutantHelper.extractDiagonalsFromSouthWestToNorthEast(dnaContent);
             requiredMatchesFound = mutantHelper.findMatchingSequencesInStrings(diagonals, matchCount);
         }

@@ -17,7 +17,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static com.nicovallet.mutant.service.MutantHelperImpl.InterruptibleForEach.forEach;
 import static java.security.MessageDigest.getInstance;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
@@ -60,14 +59,12 @@ public class MutantHelperImpl implements MutantHelper {
 
     public void validateDna(String[] dna) {
         if (null == dna || dna.length == 0 || stream(dna).anyMatch(l -> l.length() != dna.length)) {
-            throw new IllegalArgumentException("Received DNA should be of an array of string (NxN, n stricly positive");
+            throw new IllegalArgumentException("Received DNA should be of an array of string (NxN, n strictly positive");
         }
 
-        stream(dna).forEach(l -> {
-            if (l.codePoints().anyMatch(c -> !AUTHORIZED_CHARACTERS.contains(c))) {
-                throw new IllegalArgumentException("At least one unexpected character was found in received DNA");
-            }
-        });
+        if (stream(dna).anyMatch(l -> l.codePoints().anyMatch(c -> !AUTHORIZED_CHARACTERS.contains(c)))) {
+            throw new IllegalArgumentException("At least one unexpected character was found in received DNA");
+        }
     }
 
     public String computeDnaHash(String[] dna) {
@@ -79,7 +76,7 @@ public class MutantHelperImpl implements MutantHelper {
         try {
             MessageDigest md = getInstance(digestAlgorithm);
             StringBuilder dnaAsString = new StringBuilder();
-            range(0, dna.length).forEach(idx -> dnaAsString.append(dna[idx]));
+            asList(dna).stream().forEach(l -> dnaAsString.append(l));
             md.update(dnaAsString.toString().getBytes());
             byte[] digest = md.digest();
             hash = printHexBinary(digest).toUpperCase();
@@ -161,7 +158,7 @@ public class MutantHelperImpl implements MutantHelper {
     }
 
     public boolean findMatchingSequencesInStrings(List<String> lines, AtomicInteger matchesCount) {
-        forEach(lines.stream(), (line, interrupter) -> {
+        interruptibleForEach(lines.stream(), (line, interrupter) -> {
             Matcher matcher = MATCHING_PATTERN.matcher(line);
             countOccurrences(matchesCount, matcher);
             if (matchesCount.get() >= MINIMUM_MATCHES_REQUIRED) {
@@ -171,29 +168,27 @@ public class MutantHelperImpl implements MutantHelper {
         return matchesCount.get() >= MINIMUM_MATCHES_REQUIRED;
     }
 
-    static class InterruptibleForEach {
-        public static void forEach(Stream<String> stream, BiConsumer<String, Interrupter> consumer) {
-            Spliterator<String> spliterator = stream.spliterator();
-            boolean hadNext = true;
-            Interrupter breaker = new Interrupter();
+    private void interruptibleForEach(Stream<String> stream, BiConsumer<String, Interrupter> consumer) {
+        Spliterator<String> spliterator = stream.spliterator();
+        boolean hasNext = true;
+        Interrupter interrupter = new Interrupter();
 
-            while (hadNext && !breaker.get()) {
-                hadNext = spliterator.tryAdvance(elem -> {
-                    consumer.accept(elem, breaker);
-                });
-            }
+        while (hasNext && !interrupter.get()) {
+            hasNext = spliterator.tryAdvance(elem -> {
+                consumer.accept(elem, interrupter);
+            });
+        }
+    }
+
+    private static class Interrupter {
+        private boolean shouldBreak = false;
+
+        public void stop() {
+            shouldBreak = true;
         }
 
-        public static class Interrupter {
-            private boolean shouldBreak = false;
-
-            public void stop() {
-                shouldBreak = true;
-            }
-
-            boolean get() {
-                return shouldBreak;
-            }
+        boolean get() {
+            return shouldBreak;
         }
     }
 }
