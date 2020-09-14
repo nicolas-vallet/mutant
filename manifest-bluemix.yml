@@ -1,0 +1,13 @@
+#########################################
+# To use for deployment on Bluemix lite #
+#########################################
+applications:
+  - name: mutant-demo
+    random-route: true
+    path: target/mutant-finder-0.0.1-SNAPSHOT.jar
+    memory: 256M
+    instances: 1
+    buildpacks:
+      - https://github.com/cloudfoundry/java-buildpack.git
+    env:
+      JAVA_OPTS: '-XX:ReservedCodeCacheSize=32m -Xss228k'
